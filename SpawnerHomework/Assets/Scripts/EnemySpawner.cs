@@ -6,22 +6,14 @@ using UnityEngine;
 public class EnemySpawner : MonoBehaviour
 {
     [SerializeField] private Enemy _enemyPrefab;
+    [SerializeField] private Transform _target;
     [SerializeField] private Transform _spawnPoint;
-    [SerializeField] private Transform[] _points;
-
-    private float _spawnInterval = 2f;
-    private float _nextSpawnTime;
+    
+    private float _spawnInterval = 10f;
     private WaitForSeconds _cooldown;
 
     private void Awake()
     {
-        _points = new Transform[_spawnPoint.childCount];
-
-        for(int i = 0; i < _spawnPoint.childCount; i++)
-        {
-            _points[i] = _spawnPoint.GetChild(i);
-        }
-
         _cooldown = new WaitForSeconds(_spawnInterval);
         StartCoroutine(SpawnEnemy());
     }
@@ -37,12 +29,8 @@ public class EnemySpawner : MonoBehaviour
 
     private void Spawn()
     {
-        int randomPoint = Random.Range(0, _points.Length);
-        Transform randomSpawnpoint = _points[randomPoint];
+        _enemyPrefab = Instantiate(_enemyPrefab, _spawnPoint.position, Quaternion.identity);
 
-        _enemyPrefab = Instantiate(_enemyPrefab, randomSpawnpoint.position, Quaternion.identity);
-
-        Vector2 spawnDirection = randomSpawnpoint.position - _spawnPoint.position;
-        _enemyPrefab.SetMovementDirection(spawnDirection);
+        _enemyPrefab.SetTarget(_target);
     }
 }

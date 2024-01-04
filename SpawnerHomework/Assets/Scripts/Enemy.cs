@@ -7,19 +7,20 @@ public class Enemy : MonoBehaviour
 {
     private Vector2 _moveDirection;
     private float _speed = 5f;
+    private Transform _target;
 
-    public void SetMovementDirection(Vector2 direction)
+    public void SetTarget(Transform target)
     {
-        _moveDirection = direction.normalized;
+        _target = target;
     }
 
     private void Update()
     {
-        Move();
+        FollowTarget();
     }
 
-    private void Move()
+    private void FollowTarget()
     {
-        transform.Translate(_moveDirection * _speed * Time.deltaTime);
+        transform.position = Vector2.MoveTowards(transform.position, _target.position, _speed * Time.deltaTime);
     }
 }
